@@ -76,10 +76,12 @@ class CpPanelHolder extends JPanel
 
 	public CpPanelHolder()
 	{	
+		setLayout(new BorderLayout());
 		PictPanel pict = new PictPanel();
-		RightControlPanel rcp = new RightControlPanel();
-		rcp.makePictureMenuBar();
+		add(pict, BorderLayout.WEST);
 		
+		RightControlPanel rcp = new RightControlPanel();
+		add(rcp, BorderLayout.EAST);
 	}
 
 	class PictPanel extends JPanel
@@ -89,21 +91,18 @@ class CpPanelHolder extends JPanel
 
 		public PictPanel()
 		{
-
+			setBackground(Color.RED);
 			names = new String[] {"mountains.jpg", "shanghai.jpg", "trees.jpg", "water.jpg"};
 			images = new Image[names.length];
 			widthOfImages = new int[names.length];
 			heightOfImages = new int [names.length];
 
-			// load all of the pictures
 			for (int i = 0; i < names.length; i++)
 			{
 				images[i] = getMyImage("pictures/" + names[i]);
 				widthOfImages[i] = images[i].getWidth(this);
 				heightOfImages[i] = images[i].getHeight(this);	
 			}
-
-
 		}
 
 		public Image getMyImage(String pictName) 
@@ -128,7 +127,7 @@ class CpPanelHolder extends JPanel
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
-			g.drawImage(images[selected], 20, 20 + heightOfImages[selected], this);
+			g.drawImage(images[selected], 20, 20 + heightOfImages[selected], val, val, this);
 		}
 	}	
 
@@ -141,11 +140,23 @@ class CpPanelHolder extends JPanel
 
 		public RightControlPanel()
 		{
-
+			setBackground(Color.CYAN);
+			setLayout(new BorderLayout());
+			JMenuBar pictureBar = makePictureMenuBar();
+			add(pictureBar, BorderLayout.NORTH);	 
+			
+			
+			  JPanel center = new JPanel(new GridLayout(3, 1));
+            makeSlider();
+            center.add(sSize);
+            add(center, BorderLayout.CENTER);
+			
 		}
 
 		public JMenuBar makePictureMenuBar()
 		{
+			setPreferredSize(new Dimension(50, 30));
+			
 			JMenuBar bar = new JMenuBar();
 			JMenu picture = new JMenu("Pictures");
 
@@ -166,7 +177,6 @@ class CpPanelHolder extends JPanel
 			picture.add(trees);
 
 			bar.add(picture);
-
 			return bar;
 		}
 		
@@ -187,15 +197,32 @@ class CpPanelHolder extends JPanel
 
 				else if (command.equals("water"))
 					selected = 3;	
-
 				repaint();
 			}
-
 		}
 
 
 
-		// write the Listener/Handler class for the text field
+		public void makeSlider()
+		{
+			setPreferredSize(new Dimension(300, 30));
+			sSize = new JSlider(0, 100, 5);
+			sSize.setMajorTickSpacing(5);	// create tick marks on slider every 5 units
+			sSize.setPaintTicks(true);
+			sSize.setLabelTable( sSize.createStandardLabels(20) ); // create labels on tick marks
+			sSize.setPaintLabels(true);
+			sSize.setOrientation(JSlider.HORIZONTAL);
+			SliderListener slistener1 = new SliderListener();
+			sSize.addChangeListener(slistener1);
+		}
+		
+		class SliderListener implements ChangeListener 
+		{
+			public void stateChanged (ChangeEvent evt) 
+			{
+				val = sSize.getValue();	// get the value of the slider
+			}
+		}	
 
 		// write the Listener/Handler class for the slider
 
