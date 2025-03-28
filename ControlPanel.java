@@ -129,7 +129,7 @@ class CpPanelHolder extends JPanel
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
-			g.drawImage(images[i], 20, 20, this);
+			g.drawImage(images[selected], 20, 20, this);
 		}
 	}	
 		
@@ -177,17 +177,17 @@ class CpPanelHolder extends JPanel
 			shangai.addActionListener(cmh);
 			trees.addActionListener(cmh);
 			
-			calendar.add(water);
-			calendar.add(mountains);
-			calendar.add(shangai);
-			calendar.add(trees);
+			picture.add(water);
+			picture.add(mountains);
+			picture.add(shangai);
+			picture.add(trees);
 			
-			bar.add(calendar);
+			bar.add(picture);
 		
 			return bar;
 		}
 		
-		class CalendarMenuHandler implements ActionListener 
+		class PictureMenuHandler implements ActionListener 
 		{
 			public void actionPerformed( ActionEvent evt ) 
 			{
@@ -195,16 +195,16 @@ class CpPanelHolder extends JPanel
 				String command = evt.getActionCommand();
 				
 				if (command.equals("Mountains"))
-					number = 0;	
+					selected = 0;	
+				
 				else if (command.equals("Shangai"))	
-					number = 1;		
+					selected = 1;		
 					
-				else if (command.equals("Trees")
-					number = 2;
+				else if (command.equals("Trees"))
+					selected = 2;
 					
-				else if (command.equals("
 				else if (command.equals("Water"))
-					number = 4;	
+					selected = 3;	
 			}
 		}
 		
