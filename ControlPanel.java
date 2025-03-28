@@ -78,7 +78,8 @@ class CpPanelHolder extends JPanel
 	{	
 		PictPanel pict = new PictPanel();
 		RightControlPanel rcp = new RightControlPanel();
-
+		rcp.makePictureMenuBar();
+		
 	}
 
 	class PictPanel extends JPanel
