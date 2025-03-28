@@ -60,16 +60,16 @@ public class ControlPanel
 
 class CpPanelHolder extends JPanel
 {
-	private int selected;  				// the index for the picture selected to draw
-	private JTextArea tAComponentInfo;	// text area in the PictPanel, but changed in RightControlPanel2
-	private JLabel welcome;				// label in the PictPanel, but changed in RightControlPanel2
-	private Font font;  				// most fonts are the same, so there is one
-	private PictPanel pp; 				// the variables in the RightControlPanel2 need access to use repaint
-	private int val; 					// value of the slider to change the picture size
+	private int selected;  					// the index for the picture selected to draw
+	private JTextArea tAComponentInfo;		// text area in the PictPanel, but changed in RightControlPanel2
+	private JLabel welcome;					// label in the PictPanel, but changed in RightControlPanel2
+	private Font font;  					// most fonts are the same, so there is one
+	private PictPanel pp; 					// the variables in the RightControlPanel2 need access to use repaint
+	private int val; 						// value of the slider to change the picture size
 	private int width;
 	private int height;
-	private int [] widthOfImages; 		// stores the width of each image
-	private int [] heightOfImages;  	// stores the height of each image
+	private int [] widthOfImages; 			// stores the width of each image
+	private int [] heightOfImages; 	 		// stores the height of each image
 	
 	public CpPanelHolder()
 	{
@@ -133,8 +133,7 @@ class CpPanelHolder extends JPanel
 		}
 	}	
 		
-	/* 
-	 * Make all panels on the right be cyan.
+	/* Make all panels on the right be cyan.
 	 * RightControlPanel has a border layout.
 	 * On this panel are:  label, which font size already done, the text field, the menu,
 	 * the radio buttons and the slider.
@@ -144,22 +143,15 @@ class CpPanelHolder extends JPanel
 	 
 	class RightControlPanel extends JPanel
 	{
-		private JTextField tfName; // text field for user to type in their name
-		private ButtonGroup bg;	// to select the color so only one is selected
+		private JTextField tfName; 						// text field for user to type in their name
+		private ButtonGroup bg;							// to select the color so only one is selected
 		private JRadioButton color1, color2, color3;	// color choices
-		private JSlider sSize;	// slider for changing the size of the picture
+		private JSlider sSize;							// slider for changing the size of the picture
 		
 		public RightControlPanel()
 		{
 			
 		}
-	
-		/*
-		 *  There are a some more classes that you will need here to add to RightControlPanel
-		 * You will need to figure them out based on the directions/prompt and the 
-		 * sample run in the prompt.  You can figure them out based on your drawing of the
-		 * layout, i.e. your pseudocode for this.
-		 */ 
 		
 		public JMenuBar makePictureMenuBar()
 		{
@@ -191,7 +183,6 @@ class CpPanelHolder extends JPanel
 		{
 			public void actionPerformed( ActionEvent evt ) 
 			{
-				int number = 0;
 				String command = evt.getActionCommand();
 				
 				if (command.equals("Mountains"))
@@ -205,8 +196,10 @@ class CpPanelHolder extends JPanel
 					
 				else if (command.equals("Water"))
 					selected = 3;	
+		
 			}
 		}
+		
 		
 	
 		// write the Listener/Handler class for the text field
