@@ -44,18 +44,21 @@ public class ControlPanel
 		ControlPanel ce = new ControlPanel();
 		ce.run();
 	}
-	
+
 	public void run() 
 	{
-		JFrame frame = new JFrame ("Control Panel for Picture");
+		JFrame frame = new JFrame("Control Panel for Picture");
 		frame.setSize(800, 600);
 		frame.setLocation(10, 0);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
+
 		CpPanelHolder cph = new CpPanelHolder();
+		
 		frame.getContentPane().add(cph);
 		frame.setVisible(true);
 	}
+
+
 }
 
 class CpPanelHolder extends JPanel
@@ -70,34 +73,27 @@ class CpPanelHolder extends JPanel
 	private int height;
 	private int [] widthOfImages; 			// stores the width of each image
 	private int [] heightOfImages; 	 		// stores the height of each image
-	
+
 	public CpPanelHolder()
-	{
-		selected = 0;
-		tAComponentInfo = new JTextArea();
-		welcome = new JLabel();
-		font = new Font("Serif", Font.BOLD, 30);
-		pp = new PictPanel();
-		val = 0;
-		width = 0;
-		height = 0;
-		widthOfImages = new int[0];
-		heightOfImages = new int[0];
+	{	
+		PictPanel pict = new PictPanel();
+		RightControlPanel rcp = new RightControlPanel();
+
 	}
 
 	class PictPanel extends JPanel
 	{
 		private String[] names;			// the names of the pictures
 		private Image[] images;			// array of images to be drawn
-		
+
 		public PictPanel()
 		{
-			
+
 			names = new String[] {"mountains.jpg", "shanghai.jpg", "trees.jpg", "water.jpg"};
 			images = new Image[names.length];
 			widthOfImages = new int[names.length];
 			heightOfImages = new int [names.length];
-			
+
 			// load all of the pictures
 			for (int i = 0; i < names.length; i++)
 			{
@@ -105,8 +101,10 @@ class CpPanelHolder extends JPanel
 				widthOfImages[i] = images[i].getWidth(this);
 				heightOfImages[i] = images[i].getHeight(this);	
 			}
+
+
 		}
-		
+
 		public Image getMyImage(String pictName) 
 		{
 			Image picture = null;
@@ -115,67 +113,59 @@ class CpPanelHolder extends JPanel
 			{
 				picture = ImageIO.read(pictFile);	
 			}
-			
+
 			catch (IOException e)
 			{
 				System.err.print("\n\n\n" + pictName + " can't be found.\n\n\n");
 				e.printStackTrace();
 			}
-			
+
 			return picture;
 		}
-		
+
 		// draw the image on a blank screen with the top left corner at (20,20)
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
-			g.drawImage(images[selected], 20, 20, this);
+			g.drawImage(images[selected], 20, 20 + heightOfImages[selected], this);
 		}
 	}	
-		
-	/* Make all panels on the right be cyan.
-	 * RightControlPanel has a border layout.
-	 * On this panel are:  label, which font size already done, the text field, the menu,
-	 * the radio buttons and the slider.
-	 * You will have to determine the layouts in order to make them show up like the sample
-	 * run provided.
-	 */
-	 
+
 	class RightControlPanel extends JPanel
 	{
 		private JTextField tfName; 						// text field for user to type in their name
 		private ButtonGroup bg;							// to select the color so only one is selected
 		private JRadioButton color1, color2, color3;	// color choices
 		private JSlider sSize;							// slider for changing the size of the picture
-		
+
 		public RightControlPanel()
 		{
-			
+
 		}
-		
+
 		public JMenuBar makePictureMenuBar()
 		{
 			JMenuBar bar = new JMenuBar();
-			JMenu picture = new JMenu("picture");
-		
+			JMenu picture = new JMenu("Pictures");
+
 			JMenuItem water = new JMenuItem("water");
 			JMenuItem mountains = new JMenuItem("mountains");
 			JMenuItem shangai = new JMenuItem("shanghai");
 			JMenuItem trees = new JMenuItem("trees");
-		
+
 			PictureMenuHandler cmh = new PictureMenuHandler();		
 			water.addActionListener(cmh);
 			mountains.addActionListener(cmh);
 			shangai.addActionListener(cmh);
 			trees.addActionListener(cmh);
-			
+
 			picture.add(water);
 			picture.add(mountains);
 			picture.add(shangai);
 			picture.add(trees);
-			
+
 			bar.add(picture);
-		
+
 			return bar;
 		}
 		
@@ -183,29 +173,31 @@ class CpPanelHolder extends JPanel
 		{
 			public void actionPerformed( ActionEvent evt ) 
 			{
-				String command = evt.getActionCommand();
-				
-				if (command.equals("Mountains"))
+				String command = evt.getActionCommand();	
+
+				if (command.equals("mountains")) 
 					selected = 0;	
-				
-				else if (command.equals("Shangai"))	
+
+				else if (command.equals("shanghai"))	
 					selected = 1;		
-					
-				else if (command.equals("Trees"))
+
+				else if (command.equals("trees"))
 					selected = 2;
-					
-				else if (command.equals("Water"))
+
+				else if (command.equals("water"))
 					selected = 3;	
-		
+
+				repaint();
 			}
+
 		}
-		
-		
-	
+
+
+
 		// write the Listener/Handler class for the text field
-		
+
 		// write the Listener/Handler class for the slider
-	
+
 		// write Listener/Handler class for the JRadioButtons	
 	}
 }	
