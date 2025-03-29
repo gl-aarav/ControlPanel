@@ -130,7 +130,7 @@ class CpPanelHolder extends JPanel
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
-			g.drawImage(images[selected], 20+val, 20 + val + heightOfImages[selected], val, val, this);
+			g.drawImage(images[selected], 20 + val, 20 + val + heightOfImages[selected], val, val, this);
 		}
 	}	
 
