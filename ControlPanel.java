@@ -142,19 +142,15 @@ class CpPanelHolder extends JPanel
 		private JSlider sSize;							// slider for changing the size of the picture
 
 		public RightControlPanel()
-		{
+		{	
 			setLayout(new BorderLayout());
-			JPanel center = new JPanel(new GridLayout(20,0));
+			
+			
+			
+			JPanel center = new JPanel();
 			center.setBackground(Color.YELLOW);
 			JMenuBar pictureBar = makePictureMenuBar();
-			//	center.setPreferredSize(new Dimension(70,0));
-			center.add(new JPanel());
-			center.add(new JPanel());
-			center.add(new JPanel());
-			center.add(new JPanel());
-			center.add(new JPanel());
-			center.add(new JPanel());
-			center.add(pictureBar);	
+			center.add(pictureBar, BorderLayout.WEST);	
 			add (center, BorderLayout.WEST);
 
 			JPanel south = new JPanel(new GridLayout(2, 1));
