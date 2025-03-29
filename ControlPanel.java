@@ -77,15 +77,16 @@ class CpPanelHolder extends JPanel
 	public CpPanelHolder()
 	{	
 		setLayout(new BorderLayout());
-		PictPanel pict = new PictPanel();
-		add(pict, BorderLayout.WEST);
-		
 		RightControlPanel rcp = new RightControlPanel();
 		add(rcp, BorderLayout.EAST);
+		
+		PictPanel pict = new PictPanel();
+		add(pict, BorderLayout.WEST);
 	}
 
 	class PictPanel extends JPanel
 	{
+		
 		private String[] names;			// the names of the pictures
 		private Image[] images;			// array of images to be drawn
 
@@ -140,23 +141,29 @@ class CpPanelHolder extends JPanel
 
 		public RightControlPanel()
 		{
-			setBackground(Color.CYAN);
 			setLayout(new BorderLayout());
+			JPanel center = new JPanel(new GridLayout(20,0));
+			center.setBackground(Color.YELLOW);
 			JMenuBar pictureBar = makePictureMenuBar();
-			add(pictureBar, BorderLayout.NORTH);	 
+		//	center.setPreferredSize(new Dimension(70,0));
+			center.add(new JPanel());
+			center.add(new JPanel());
+			center.add(new JPanel());
+			center.add(new JPanel());
+			center.add(new JPanel());
+			center.add(new JPanel());
+			center.add(pictureBar);	
+			add (center, BorderLayout.WEST);
 			
-			
-			  JPanel center = new JPanel(new GridLayout(3, 1));
+			JPanel south = new JPanel(new GridLayout(2, 1));
+			south.setBackground(Color.CYAN);
             makeSlider();
-            center.add(sSize);
-            add(center, BorderLayout.CENTER);
-			
+            south.add(sSize);
+            add(south, BorderLayout.SOUTH);
 		}
 
 		public JMenuBar makePictureMenuBar()
 		{
-			setPreferredSize(new Dimension(50, 30));
-			
 			JMenuBar bar = new JMenuBar();
 			JMenu picture = new JMenu("Pictures");
 
@@ -175,8 +182,9 @@ class CpPanelHolder extends JPanel
 			picture.add(mountains);
 			picture.add(shangai);
 			picture.add(trees);
-
+			
 			bar.add(picture);
+	
 			return bar;
 		}
 		
@@ -206,10 +214,10 @@ class CpPanelHolder extends JPanel
 		public void makeSlider()
 		{
 			setPreferredSize(new Dimension(300, 30));
-			sSize = new JSlider(0, 100, 5);
+			sSize = new JSlider(0, 200, 5);
 			sSize.setMajorTickSpacing(5);	// create tick marks on slider every 5 units
 			sSize.setPaintTicks(true);
-			sSize.setLabelTable( sSize.createStandardLabels(20) ); // create labels on tick marks
+			sSize.setLabelTable(sSize.createStandardLabels(20)); // create labels on tick marks
 			sSize.setPaintLabels(true);
 			sSize.setOrientation(JSlider.HORIZONTAL);
 			SliderListener slistener1 = new SliderListener();
@@ -220,12 +228,21 @@ class CpPanelHolder extends JPanel
 		{
 			public void stateChanged (ChangeEvent evt) 
 			{
-				val = sSize.getValue();	// get the value of the slider
+				val = sSize.getValue();	
 			}
 		}	
 
-		// write the Listener/Handler class for the slider
-
-		// write Listener/Handler class for the JRadioButtons	
+		public void makeRB()
+		{
+			
+		}
+		
+		class RButtonHandler implements ActionListener
+		{
+			public void actionPerformed( ActionEvent evt ) 
+			{
+				
+			}
+		}
 	}
 }	
