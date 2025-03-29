@@ -37,6 +37,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import AllComponentExample.RButtonHandler;
+
 public class ControlPanel
 {
 	public static void main(String[] args) 
@@ -53,7 +55,7 @@ public class ControlPanel
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		CpPanelHolder cph = new CpPanelHolder();
-		
+
 		frame.getContentPane().add(cph);
 		frame.setVisible(true);
 	}
@@ -79,14 +81,14 @@ class CpPanelHolder extends JPanel
 		setLayout(new BorderLayout());
 		RightControlPanel rcp = new RightControlPanel();
 		add(rcp, BorderLayout.EAST);
-		
+
 		PictPanel pict = new PictPanel();
 		add(pict, BorderLayout.WEST);
 	}
 
 	class PictPanel extends JPanel
 	{
-		
+
 		private String[] names;			// the names of the pictures
 		private Image[] images;			// array of images to be drawn
 
@@ -128,7 +130,7 @@ class CpPanelHolder extends JPanel
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
-			g.drawImage(images[selected], 20, 20 + heightOfImages[selected], val, val, this);
+			g.drawImage(images[selected], 20+val, 20 + val + heightOfImages[selected], val, val, this);
 		}
 	}	
 
@@ -145,7 +147,7 @@ class CpPanelHolder extends JPanel
 			JPanel center = new JPanel(new GridLayout(20,0));
 			center.setBackground(Color.YELLOW);
 			JMenuBar pictureBar = makePictureMenuBar();
-		//	center.setPreferredSize(new Dimension(70,0));
+			//	center.setPreferredSize(new Dimension(70,0));
 			center.add(new JPanel());
 			center.add(new JPanel());
 			center.add(new JPanel());
@@ -154,12 +156,14 @@ class CpPanelHolder extends JPanel
 			center.add(new JPanel());
 			center.add(pictureBar);	
 			add (center, BorderLayout.WEST);
-			
+
 			JPanel south = new JPanel(new GridLayout(2, 1));
 			south.setBackground(Color.CYAN);
-            makeSlider();
-            south.add(sSize);
-            add(south, BorderLayout.SOUTH);
+			makeSlider();
+			south.add(sSize);
+			add(south, BorderLayout.SOUTH);
+			
+			
 		}
 
 		public JMenuBar makePictureMenuBar()
@@ -182,12 +186,12 @@ class CpPanelHolder extends JPanel
 			picture.add(mountains);
 			picture.add(shangai);
 			picture.add(trees);
-			
+
 			bar.add(picture);
-	
+
 			return bar;
 		}
-		
+
 		class PictureMenuHandler implements ActionListener 
 		{
 			public void actionPerformed( ActionEvent evt ) 
@@ -223,7 +227,7 @@ class CpPanelHolder extends JPanel
 			SliderListener slistener1 = new SliderListener();
 			sSize.addChangeListener(slistener1);
 		}
-		
+
 		class SliderListener implements ChangeListener 
 		{
 			public void stateChanged (ChangeEvent evt) 
@@ -232,16 +236,40 @@ class CpPanelHolder extends JPanel
 			}
 		}	
 
-		public void makeRB()
+		public JPanel makeRB()
 		{
-			
+			JPanel rbPanel = new JPanel();
+			rbPanel.setLayout( new FlowLayout(FlowLayout.CENTER, 200, 50) );
+			ButtonGroup bg = new ButtonGroup();
+
+			JLabel question1 = new JLabel("Select a color");
+			question1.setFont(new Font("Serif", Font.BOLD, 20));
+			rbPanel.add( question1 );
+
+			RButtonHandler rbh = new RButtonHandler();
+			color1 = new JRadioButton("RED");	// construct button  
+			bg.add(color1);					// add button to panel	
+			color1.addActionListener(rbh); 	// add listener to JRadioButton
+			rbPanel.add(color1);				// add JRadioButton to Panel
+
+			color2 = new JRadioButton( "BLUE" );	// construct button  
+			bg.add( color2 );		// add b2utton to panel	
+			color2.addActionListener(rbh); 		// add listener to button
+			rbPanel.add( color2 );
+
+			color3 = new JRadioButton( "MAGENTA" );	// construct button  
+			bg.add( color3 );		// add b3utton to panel	
+			color3.addActionListener(rbh); 	// add listener to button
+			rbPanel.add( color3 );
+
+			return rbPanel;
 		}
-		
+
 		class RButtonHandler implements ActionListener
 		{
 			public void actionPerformed( ActionEvent evt ) 
 			{
-				
+
 			}
 		}
 	}
