@@ -150,7 +150,9 @@ class CpPanelHolder extends JPanel
 			JPanel center = new JPanel();
 			center.setBackground(Color.YELLOW);
 			JMenuBar pictureBar = makePictureMenuBar();
-			center.add(pictureBar, BorderLayout.WEST);	
+			center.setLayout(new BorderLayout());
+			center.add(pictureBar, BorderLayout.EAST);	
+			
 			add (center, BorderLayout.WEST);
 
 			JPanel south = new JPanel(new GridLayout(2, 1));
