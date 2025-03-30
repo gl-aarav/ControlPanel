@@ -115,13 +115,18 @@ class CpPanelHolder extends JPanel
 			welcome.setFont(font);
 			welcome.setForeground(Color.BLACK);
 			add(welcome, BorderLayout.NORTH); // Add welcome label after setting the layout
-			
+
 			JPanel textArea = new JPanel(new BorderLayout());
-			tAComponentInfo = new JTextArea("What the component has changed will show up here", 10, 1);
+			tAComponentInfo = new JTextArea("What the component has changed will show up here", 20, 1);
 			tAComponentInfo.setLineWrap(true);
-			tAComponentInfo.setWrapStyleWord(true); 
-			textArea.add(tAComponentInfo, BorderLayout.SOUTH);
+			tAComponentInfo.setWrapStyleWord(true);
+			tAComponentInfo.setEditable(false); // Optional: Prevent user from editing if needed
+
+			JScrollPane scrollPane = new JScrollPane(tAComponentInfo);
+			scrollPane.setPreferredSize(new Dimension(0, 175)); // Set fixed size to prevent expansion
+			textArea.add(scrollPane, BorderLayout.SOUTH);
 			add(textArea, BorderLayout.SOUTH);
+
 		}
 
 		public Image getMyImage(String pictName) 
@@ -142,17 +147,43 @@ class CpPanelHolder extends JPanel
 			return picture;
 		}
 
-		// draw the image on a blank screen with the top left corner at(20,20)
-		public void paintComponent(Graphics g)
+		public void paintComponent(Graphics g) 
 		{
-			super.paintComponent(g);
-			if (images[selected] != null) 
-			{
-				int newWidth = widthOfImages[selected] + 4 * val;
-				int newHeight = heightOfImages[selected] + 4 * val;
-				g.drawImage(images[selected], 20, 20, newWidth/4, newHeight/4, this);
-			}
+		    super.paintComponent(g);
+
+		    if (images[selected] != null) 
+		    {
+		        int originalWidth = widthOfImages[selected];
+		        int originalHeight = heightOfImages[selected];
+
+ 		        int newWidthTemp = (originalWidth + 6 * val)/4;
+		        int newHeightTemp = (originalHeight + 6 * val)/4;
+
+		        int maxWidth = getWidth() - 20;  
+		        int maxHeight = getHeight() - 20;
+
+		        int newWidth = newWidthTemp;
+		        int newHeight = newHeightTemp;
+
+		        if (newWidth > maxWidth) 
+		        {
+		            double scaleRatio = (double) maxWidth / newWidthTemp;
+		            newWidth = maxWidth;
+		            newHeight = (int) (newHeightTemp * scaleRatio);
+		        }
+		       
+		        else if (newHeight > maxHeight) 
+		        {
+		            double scaleRatio = (double) maxHeight / newHeightTemp;
+		            newHeight = maxHeight;
+		            newWidth = (int) (newWidthTemp * scaleRatio);
+		        }
+
+		        g.drawImage(images[selected], 20, 20, newWidth, newHeight, this);
+		    }
 		}
+
+
 
 		public void setSelected(int index) 
 		{
@@ -171,15 +202,8 @@ class CpPanelHolder extends JPanel
 			String colorText = new String ("");
 			if (!name.equals("Enter Your Name:"))
 			{
-				if(tAComponentInfo.getText().equals("The welcome sign color was changed to Red."))
-					colorText = "The color of the welcome sign is red";
-				else if (tAComponentInfo.getText().equals("The welcome sign color was changed to Blue."))
-					colorText = "The color of the welcome sign is blue";
-				else if (tAComponentInfo.getText().equals("The welcome sign color was changed to Magenta."))	
-					colorText = "The color of the welcome sign is magenta";
-
 				welcome.setText("Welcome, " + name + "!");
-				tAComponentInfo.setText("The welcome sign is now to " + welcome.getText() + "\n" + colorText + ".");
+				tAComponentInfo.setText("The welcome sign is now to " + welcome.getText() + ".");
 			}
 			welcome.setForeground(color);
 		}
@@ -196,69 +220,64 @@ class CpPanelHolder extends JPanel
 
 		public RightControlPanel(PictPanel pictPanel)
 		{    
-		    this.pictPanel = pictPanel;
-		    setBackground(Color.CYAN);
-		    setLayout(new BorderLayout());
+			this.pictPanel = pictPanel;
+			setBackground(Color.CYAN);
+			setLayout(new BorderLayout());
 
-		    JPanel labelAndText = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
-		    labelAndText.setBackground(Color.CYAN);
-		    labelAndText.setPreferredSize(new Dimension(200, 60)); // Ensure space for JTextField
-		    
-		    JLabel l = new JLabel("     Control Panel     "); 
-		    l.setFont(font);
-		    labelAndText.add(l);
+			JPanel labelAndText = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+			labelAndText.setBackground(Color.CYAN);
+			labelAndText.setPreferredSize(new Dimension(200, 60)); // Ensure space for JTextField
 
-		    // Create and assign the text field
-		    tfName = new JTextField("Enter Your Name:", 15);
-		    tfName.setPreferredSize(new Dimension(180, 25));
-		    tfName.addActionListener(new TextFieldHandler());
+			JLabel l = new JLabel("     Control Panel     "); 
+			l.setFont(font);
+			labelAndText.add(l);
 
-		    labelAndText.add(tfName); // Ensure JTextField is properly added
-		    add(labelAndText, BorderLayout.NORTH);
+			// Create and assign the text field
+			tfName = new JTextField("Enter Your Name:", 15);
+			tfName.setPreferredSize(new Dimension(180, 25));
+			tfName.addActionListener(new TextFieldHandler());
 
-		    JPanel menu = new JPanel(new BorderLayout());
-		    menu.setBackground(Color.CYAN);
-		    JMenuBar pictureBar = makePictureMenuBar();
-		    menu.add(pictureBar, BorderLayout.NORTH);    
-		    add(menu, BorderLayout.WEST);
+			labelAndText.add(tfName); // Ensure JTextField is properly added
+			add(labelAndText, BorderLayout.NORTH);
 
-		    JPanel slider = new JPanel(new GridLayout(2, 1));
-		    slider.setBackground(Color.CYAN);
-		    makeSlider();
-		    slider.add(sSize);
-		    add(slider, BorderLayout.SOUTH);
+			JPanel menu = new JPanel(new BorderLayout());
+			menu.setBackground(Color.CYAN);
+			JMenuBar pictureBar = makePictureMenuBar();
+			menu.add(pictureBar, BorderLayout.NORTH);    
+			add(menu, BorderLayout.WEST);
 
-		    JPanel rButtonPanel = makeRB();
-		    rButtonPanel.setBackground(Color.CYAN);
-		    add(rButtonPanel, BorderLayout.EAST);
+			JPanel slider = new JPanel(new GridLayout(2, 1));
+			slider.setBackground(Color.CYAN);
+			makeSlider();
+			slider.add(sSize);
+			add(slider, BorderLayout.SOUTH);
+
+			JPanel rButtonPanel = makeRB();
+			rButtonPanel.setBackground(Color.CYAN);
+			add(rButtonPanel, BorderLayout.EAST);
 		}
 
 
 		public JTextField makeText() 
 		{
-		    JTextField textField = new JTextField("Enter Your Name:");
-		    textField.setPreferredSize(new Dimension(180, 25));  
-		    textField.addActionListener(new TextFieldHandler());
-		    return textField;  
+			JTextField textField = new JTextField("Enter Your Name:");
+			textField.setPreferredSize(new Dimension(180, 25));  
+			textField.addActionListener(new TextFieldHandler());
+			return textField;  
 		}
-
-
-
 
 		class TextFieldHandler implements ActionListener 
 		{
-		    public void actionPerformed(ActionEvent e) 
-		    {
-		        String userName = tfName.getText(); 
-		        if (!userName.isEmpty() && !userName.equals("Enter Your Name:")) 
-		        {
-		            Color selectedColor = getSelectedColor(); 
-		            pictPanel.updateWelcomeText(userName, selectedColor);
-		        }
-		    }
+			public void actionPerformed(ActionEvent e) 
+			{
+				String userName = tfName.getText(); 
+				if (!userName.isEmpty() && !userName.equals("Enter Your Name:")) 
+				{
+					Color selectedColor = getSelectedColor(); 
+					pictPanel.updateWelcomeText(userName, selectedColor);
+				}
+			}
 		}
-
-
 
 		public JMenuBar makePictureMenuBar()
 		{
@@ -294,24 +313,24 @@ class CpPanelHolder extends JPanel
 
 				if(command.equals("mountains")) 
 				{
-					tAComponentInfo.setText("The picture color was changed to \"Mountains.\"");
+					tAComponentInfo.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Mountains.\"");
 					pictPanel.setSelected(0);    
 				}
 
 				else if(command.equals("shanghai"))   
 				{
-					tAComponentInfo.setText("The picture color was changed to \"Shangai.\"");
+					tAComponentInfo.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Shangai.\"");
 					pictPanel.setSelected(1);        
 				}
 
 				else if(command.equals("trees"))
 				{
-					tAComponentInfo.setText("The picture color was changed to \"Trees.\"");
+					tAComponentInfo.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Trees.\"");
 					pictPanel.setSelected(2);
 				}
 				else if(command.equals("water"))
 				{
-					tAComponentInfo.setText("The picture color was changed to \"Water.\"");
+					tAComponentInfo.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Water.\"");
 					pictPanel.setSelected(3);    
 				}
 			}
@@ -335,9 +354,13 @@ class CpPanelHolder extends JPanel
 			public void stateChanged(ChangeEvent evt) 
 			{
 				int value = sSize.getValue();
-				tAComponentInfo.setText("The slider value was changed to " + value + ".");
+				if (!sSize.getValueIsAdjusting()) 
+				{ 
+					tAComponentInfo.setText("The slider value was changed to " + value + ".");
+					pictPanel.setSliderValue(value);
+				}
 				pictPanel.setSliderValue(value);
-				System.out.println(value);
+				repaint();
 			}
 		}    
 
@@ -373,9 +396,15 @@ class CpPanelHolder extends JPanel
 		{
 			public void actionPerformed(ActionEvent evt) 
 			{ 
-			    String userName = tfName.getText();
-			    Color selectedColor = getSelectedColor();
-			    pictPanel.updateWelcomeText(userName, selectedColor);
+				String userName = tfName.getText();
+				Color selectedColor = getSelectedColor();
+				pictPanel.updateWelcomeText(userName, selectedColor);
+				if (getSelectedColor() == Color.RED)
+					tAComponentInfo.setText("The welcome sign color was changed to red.");
+				else if (getSelectedColor() == Color.BLUE)
+					tAComponentInfo.setText("The welcome sign color was changed to blue.");
+				else  if (getSelectedColor() == Color.MAGENTA)
+					tAComponentInfo.setText("The welcome sign color was changed to magenta.");
 			}
 		}
 
@@ -383,20 +412,17 @@ class CpPanelHolder extends JPanel
 		{
 			if (color1.isSelected())
 			{
-				tAComponentInfo.setText("The welcome sign color was changed to Red.");
 				return Color.RED;
 			}
 			else if (color2.isSelected())
 			{
-				tAComponentInfo.setText("The welcome sign color was changed to Blue.");
 				return Color.BLUE;
 			}
 			else if (color3.isSelected())
 			{
-				tAComponentInfo.setText("The welcome sign color was changed to Magenta.");
 				return Color.MAGENTA;
 			}
-			
+
 			return Color.BLACK;  // Default color
 		}
 	}
