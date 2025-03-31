@@ -203,7 +203,7 @@ class CpPanelHolder extends JPanel
 			if (!name.equals("Enter Your Name:"))
 			{
 				welcome.setText("Welcome, " + name + "!");
-				tAComponentInfo.setText("The welcome sign is now to " + welcome.getText() + ".");
+				tAComponentInfo.setText("The welcome sign is now to \"" + welcome.getText() + "\"");
 			}
 			welcome.setForeground(color);
 		}
