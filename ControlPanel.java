@@ -2,52 +2,43 @@
  * Aarav Goyal
  * 3/26/2025
  * ControlPanel.java
- */ 
+ */
 
-import java.awt.Graphics;
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-
-import javax.swing.JFrame;  
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-
-import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.ButtonGroup;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
 import javax.swing.JSlider;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class ControlPanel
-{
-	public static void main(String[] args) 
-	{
+public class ControlPanel {
+	public static void main(String[] args) {
 		ControlPanel ce = new ControlPanel();
 		ce.run();
 	}
 
-	public void run() 
-	{
+	public void run() {
 		JFrame frame = new JFrame("Control Panel for Picture");
 		frame.setSize(800, 600);
 		frame.setLocation(10, 0);
@@ -60,53 +51,45 @@ public class ControlPanel
 	}
 }
 
-class CpPanelHolder extends JPanel
-{
-	private int selected;                     // the index for the picture selected to draw
-	private JTextArea tAComponentInfo;        // text area in the PictPanel, but changed in RightControlPanel2
-	private JLabel welcome;                   // label in the PictPanel, but changed in RightControlPanel2
-	private Font font;                        // most fonts are the same, so there is one
-	private int val;                          // value of the slider to change the picture size
+class CpPanelHolder extends JPanel {
+	private int selected; // the index for the picture selected to draw
+	private JTextArea tAComponentInfo; // text area in the PictPanel, but changed in RightControlPanel2
+	private JLabel welcome; // label in the PictPanel, but changed in RightControlPanel2
+	private Font font; // most fonts are the same, so there is one
+	private int val; // value of the slider to change the picture size
 	private int width;
 	private int height;
-	private int [] widthOfImages;            // stores the width of each image
-	private int [] heightOfImages;           // stores the height of each image
+	private int[] widthOfImages; // stores the width of each image
+	private int[] heightOfImages; // stores the height of each image
 
-	public CpPanelHolder()
-	{        
+	public CpPanelHolder() {
 		font = new Font("Serif", Font.BOLD, 15);
 		setLayout(new BorderLayout());
 		PictPanel pict = new PictPanel();
-		add(pict, BorderLayout.CENTER);    
+		add(pict, BorderLayout.CENTER);
 
 		RightControlPanel rcp = new RightControlPanel(pict);
 		add(rcp, BorderLayout.EAST);
 	}
 
-	class PictPanel extends JPanel
-	{
-		private String[] names;                // the names of the pictures
-		private Image[] images;                // array of images to be drawn
+	class PictPanel extends JPanel {
+		private String[] names; // the names of the pictures
+		private Image[] images; // array of images to be drawn
 
-		public PictPanel()
-		{
+		public PictPanel() {
 			setLayout(new BorderLayout()); // Set layout before adding components
 
-			names = new String[] {"mountains.jpg", "shanghai.jpg", "trees.jpg", "water.jpg"};
+			names = new String[] { "mountains.jpg", "shanghai.jpg", "trees.jpg", "water.jpg" };
 			images = new Image[names.length];
 			widthOfImages = new int[names.length];
-			heightOfImages = new int [names.length];
+			heightOfImages = new int[names.length];
 
-			for(int i = 0; i < names.length; i++)
-			{
+			for (int i = 0; i < names.length; i++) {
 				images[i] = getMyImage("pictures/" + names[i]);
-				if (images[i] != null) 
-				{  
+				if (images[i] != null) {
 					widthOfImages[i] = images[i].getWidth(this);
 					heightOfImages[i] = images[i].getHeight(this);
-				}
-				else 
-				{
+				} else {
 					System.err.println("Failed to load image: " + names[i]);
 				}
 			}
@@ -129,17 +112,14 @@ class CpPanelHolder extends JPanel
 
 		}
 
-		public Image getMyImage(String pictName) 
-		{
+		public Image getMyImage(String pictName) {
 			Image picture = null;
 			File pictFile = new File(pictName);
-			try 
-			{
-				picture = ImageIO.read(pictFile);    
+			try {
+				picture = ImageIO.read(pictFile);
 			}
 
-			catch(IOException e)
-			{
+			catch (IOException e) {
 				System.err.print("\n\n\n" + pictName + " can't be found.\n\n\n");
 				e.printStackTrace();
 			}
@@ -147,61 +127,51 @@ class CpPanelHolder extends JPanel
 			return picture;
 		}
 
-		public void paintComponent(Graphics g) 
-		{
-		    super.paintComponent(g);
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
 
-		    if (images[selected] != null) 
-		    {
-		        int originalWidth = widthOfImages[selected];
-		        int originalHeight = heightOfImages[selected];
+			if (images[selected] != null) {
+				int originalWidth = widthOfImages[selected];
+				int originalHeight = heightOfImages[selected];
 
- 		        int newWidthTemp = (originalWidth + 6 * val)/4;
-		        int newHeightTemp = (originalHeight + 6 * val)/4;
+				int newWidthTemp = (originalWidth + 6 * val) / 4;
+				int newHeightTemp = (originalHeight + 6 * val) / 4;
 
-		        int maxWidth = getWidth() - 20;  
-		        int maxHeight = getHeight() - 20;
+				int maxWidth = getWidth() - 20;
+				int maxHeight = getHeight() - 20;
 
-		        int newWidth = newWidthTemp;
-		        int newHeight = newHeightTemp;
+				int newWidth = newWidthTemp;
+				int newHeight = newHeightTemp;
 
-		        if (newWidth > maxWidth) 
-		        {
-		            double scaleRatio = (double) maxWidth / newWidthTemp;
-		            newWidth = maxWidth;
-		            newHeight = (int) (newHeightTemp * scaleRatio);
-		        }
-		       
-		        else if (newHeight > maxHeight) 
-		        {
-		            double scaleRatio = (double) maxHeight / newHeightTemp;
-		            newHeight = maxHeight;
-		            newWidth = (int) (newWidthTemp * scaleRatio);
-		        }
+				if (newWidth > maxWidth) {
+					double scaleRatio = (double) maxWidth / newWidthTemp;
+					newWidth = maxWidth;
+					newHeight = (int) (newHeightTemp * scaleRatio);
+				}
 
-		        g.drawImage(images[selected], 20, 20, newWidth, newHeight, this);
-		    }
+				else if (newHeight > maxHeight) {
+					double scaleRatio = (double) maxHeight / newHeightTemp;
+					newHeight = maxHeight;
+					newWidth = (int) (newWidthTemp * scaleRatio);
+				}
+
+				g.drawImage(images[selected], 20, 20, newWidth, newHeight, this);
+			}
 		}
 
-
-
-		public void setSelected(int index) 
-		{
+		public void setSelected(int index) {
 			selected = index;
 			repaint();
 		}
 
-		public void setSliderValue(int value) 
-		{
+		public void setSliderValue(int value) {
 			val = value;
 			repaint();
 		}
 
-		public void updateWelcomeText(String name, Color color) 
-		{
-			String colorText = new String ("");
-			if (!name.equals("Enter Your Name:"))
-			{
+		public void updateWelcomeText(String name, Color color) {
+			String colorText = new String("");
+			if (!name.equals("Enter Your Name:")) {
 				welcome.setText("Welcome, " + name + "!");
 				tAComponentInfo.setText("The welcome sign is now to \"" + welcome.getText() + "\"");
 			}
@@ -209,26 +179,23 @@ class CpPanelHolder extends JPanel
 		}
 	}
 
-
-	class RightControlPanel extends JPanel
-	{
-		private JTextField tfName;                         // text field for user to type in their name
-		private ButtonGroup bg;                            // to select the color so only one is selected
-		private JRadioButton color1, color2, color3;       // color choices
-		private JSlider sSize;                             // slider for changing the size of the picture
+	class RightControlPanel extends JPanel {
+		private JTextField tfName; // text field for user to type in their name
+		private ButtonGroup bg; // to select the color so only one is selected
+		private JRadioButton color1, color2, color3; // color choices
+		private JSlider sSize; // slider for changing the size of the picture
 		private PictPanel pictPanel;
 
-		public RightControlPanel(PictPanel pictPanel)
-		{    
+		public RightControlPanel(PictPanel pictPanel) {
 			this.pictPanel = pictPanel;
 			setBackground(Color.CYAN);
 			setLayout(new BorderLayout());
 
-			JPanel labelAndText = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+			JPanel labelAndText = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			labelAndText.setBackground(Color.CYAN);
 			labelAndText.setPreferredSize(new Dimension(200, 60)); // Ensure space for JTextField
 
-			JLabel l = new JLabel("     Control Panel     "); 
+			JLabel l = new JLabel("     Control Panel     ");
 			l.setFont(font);
 			labelAndText.add(l);
 
@@ -243,7 +210,7 @@ class CpPanelHolder extends JPanel
 			JPanel menu = new JPanel(new BorderLayout());
 			menu.setBackground(Color.CYAN);
 			JMenuBar pictureBar = makePictureMenuBar();
-			menu.add(pictureBar, BorderLayout.NORTH);    
+			menu.add(pictureBar, BorderLayout.NORTH);
 			add(menu, BorderLayout.WEST);
 
 			JPanel slider = new JPanel(new GridLayout(2, 1));
@@ -257,30 +224,24 @@ class CpPanelHolder extends JPanel
 			add(rButtonPanel, BorderLayout.EAST);
 		}
 
-
-		public JTextField makeText() 
-		{
+		public JTextField makeText() {
 			JTextField textField = new JTextField("Enter Your Name:");
-			textField.setPreferredSize(new Dimension(180, 25));  
+			textField.setPreferredSize(new Dimension(180, 25));
 			textField.addActionListener(new TextFieldHandler());
-			return textField;  
+			return textField;
 		}
 
-		class TextFieldHandler implements ActionListener 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				String userName = tfName.getText(); 
-				if (!userName.isEmpty() && !userName.equals("Enter Your Name:")) 
-				{
-					Color selectedColor = getSelectedColor(); 
+		class TextFieldHandler implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				String userName = tfName.getText();
+				if (!userName.isEmpty() && !userName.equals("Enter Your Name:")) {
+					Color selectedColor = getSelectedColor();
 					pictPanel.updateWelcomeText(userName, selectedColor);
 				}
 			}
 		}
 
-		public JMenuBar makePictureMenuBar()
-		{
+		public JMenuBar makePictureMenuBar() {
 			JMenuBar bar = new JMenuBar();
 			JMenu picture = new JMenu("Pictures");
 
@@ -289,7 +250,7 @@ class CpPanelHolder extends JPanel
 			JMenuItem shanghai = new JMenuItem("shanghai");
 			JMenuItem trees = new JMenuItem("trees");
 
-			PictureMenuHandler cmh = new PictureMenuHandler();        
+			PictureMenuHandler cmh = new PictureMenuHandler();
 			water.addActionListener(cmh);
 			mountains.addActionListener(cmh);
 			shanghai.addActionListener(cmh);
@@ -305,67 +266,59 @@ class CpPanelHolder extends JPanel
 			return bar;
 		}
 
-		class PictureMenuHandler implements ActionListener 
-		{
-			public void actionPerformed(ActionEvent evt) 
-			{
-				String command = evt.getActionCommand();    
+		class PictureMenuHandler implements ActionListener {
+			public void actionPerformed(ActionEvent evt) {
+				String command = evt.getActionCommand();
 
-				if(command.equals("mountains")) 
-				{
-					tAComponentInfo.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Mountains.\"");
-					pictPanel.setSelected(0);    
+				if (command.equals("mountains")) {
+					tAComponentInfo.setText(
+							tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Mountains.\"");
+					pictPanel.setSelected(0);
 				}
 
-				else if(command.equals("shanghai"))   
-				{
-					tAComponentInfo.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Shangai.\"");
-					pictPanel.setSelected(1);        
+				else if (command.equals("shanghai")) {
+					tAComponentInfo.setText(
+							tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Shangai.\"");
+					pictPanel.setSelected(1);
 				}
 
-				else if(command.equals("trees"))
-				{
-					tAComponentInfo.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Trees.\"");
+				else if (command.equals("trees")) {
+					tAComponentInfo
+							.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Trees.\"");
 					pictPanel.setSelected(2);
-				}
-				else if(command.equals("water"))
-				{
-					tAComponentInfo.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Water.\"");
-					pictPanel.setSelected(3);    
+				} else if (command.equals("water")) {
+					tAComponentInfo
+							.setText(tAComponentInfo.getText() + "\n" + "The picture color was changed to \"Water.\"");
+					pictPanel.setSelected(3);
 				}
 			}
 		}
 
-		public void makeSlider()
-		{
+		public void makeSlider() {
 			setPreferredSize(new Dimension(300, 30));
 			sSize = new JSlider(0, 200, 5);
-			sSize.setMajorTickSpacing(20);    
+			sSize.setMajorTickSpacing(20);
 			sSize.setPaintTicks(true);
-			sSize.setLabelTable(sSize.createStandardLabels(20)); 
+			sSize.setLabelTable(sSize.createStandardLabels(20));
 			sSize.setPaintLabels(true);
 			sSize.setOrientation(JSlider.HORIZONTAL);
 			SliderListener slistener1 = new SliderListener();
 			sSize.addChangeListener(slistener1);
 		}
 
-		class SliderListener implements ChangeListener 
-		{
-			public void stateChanged(ChangeEvent evt) 
-			{
+		class SliderListener implements ChangeListener {
+			public void stateChanged(ChangeEvent evt) {
 				int value = sSize.getValue();
-				if (!sSize.getValueIsAdjusting()) 
-				{ 
+				if (!sSize.getValueIsAdjusting()) {
 					tAComponentInfo.setText("The slider value was changed to " + value + ".");
 					pictPanel.setSliderValue(value);
 				}
 				pictPanel.setSliderValue(value);
 				repaint();
 			}
-		}    
+		}
 
-		public JPanel makeRB()
-		{
+		public JPanel makeRB() {
 			JPanel rbPanel = new JPanel(new GridLayout(8, 1));
 			JLabel color = new JLabel("Select a color of the label:  ");
 			rbPanel.add(color);
@@ -392,10 +345,8 @@ class CpPanelHolder extends JPanel
 			return rbPanel;
 		}
 
-		class RButtonHandler implements ActionListener
-		{
-			public void actionPerformed(ActionEvent evt) 
-			{ 
+		class RButtonHandler implements ActionListener {
+			public void actionPerformed(ActionEvent evt) {
 				String userName = tfName.getText();
 				Color selectedColor = getSelectedColor();
 				pictPanel.updateWelcomeText(userName, selectedColor);
@@ -403,27 +354,21 @@ class CpPanelHolder extends JPanel
 					tAComponentInfo.setText("The welcome sign color was changed to red.");
 				else if (getSelectedColor() == Color.BLUE)
 					tAComponentInfo.setText("The welcome sign color was changed to blue.");
-				else  if (getSelectedColor() == Color.MAGENTA)
+				else if (getSelectedColor() == Color.MAGENTA)
 					tAComponentInfo.setText("The welcome sign color was changed to magenta.");
 			}
 		}
 
-		private Color getSelectedColor() 
-		{
-			if (color1.isSelected())
-			{
+		private Color getSelectedColor() {
+			if (color1.isSelected()) {
 				return Color.RED;
-			}
-			else if (color2.isSelected())
-			{
+			} else if (color2.isSelected()) {
 				return Color.BLUE;
-			}
-			else if (color3.isSelected())
-			{
+			} else if (color3.isSelected()) {
 				return Color.MAGENTA;
 			}
 
-			return Color.BLACK;  // Default color
+			return Color.BLACK; // Default color
 		}
 	}
 }
